@@ -3,28 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basic WebGL Example</title>
+    <title>Three.js Basic Example</title>
 </head>
 <body>
-    <!-- Create a canvas element -->
-    <canvas id="glCanvas" width="640" height="480"></canvas>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Step 1: Get a WebGL context
-        const canvas = document.getElementById("glCanvas");
-        const gl = canvas.getContext("webgl");
+        // Set up the scene, camera, and renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
 
-        // Check if WebGL is supported
-        if (!gl) {
-            alert("WebGL not supported by your browser.");
-        } else {
-            // Step 2: Set up the WebGL viewport
-            gl.viewport(0, 0, canvas.width, canvas.height);
+        // Create a cube
+        const geometry = new THREE.BoxGeometry();
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
 
-            // Step 3: Clear the canvas with a color
-            gl.clearColor(0.0, 0.0, 0.0, 1.0); // black background
-            gl.clear(gl.COLOR_BUFFER_BIT);
+        camera.position.z = 5;
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
+            renderer.render(scene, camera);
         }
+
+        animate();
     </script>
 </body>
 </html>
