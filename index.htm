@@ -3,14 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js OBJ Model with Color</title>
+    <title>Three.js 3D Text Above Model</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
     
     <script>
- 
+
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
         const renderer = new THREE.WebGLRenderer();
@@ -19,31 +32,75 @@
 
         camera.position.z = 5;
 
+
         const objLoader = new THREE.OBJLoader();
+        let loadedObject = null;
 
         objLoader.load(
-            'Resources/Models/suzanne.obj',  
+            'Resources/Models/suzanne.obj', 
             (object) => {             
- 
+                // Apply red material to the model
                 object.traverse((child) => {
                     if (child.isMesh) {
                         child.material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
                     }
                 });
 
-                scene.add(object); 
+                loadedObject = object;  
+                scene.add(object);  
             },
-            undefined,                 
-            (error) => {              
+            undefined, 
+            (error) => { 
                 console.error('Error loading model', error);
             }
         );
 
 
+        const fontLoader = new THREE.FontLoader();
+        let font;
+
+        fontLoader.load('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/fonts/helvetiker_regular.typeface.json', (loadedFont) => {
+            font = loadedFont;
+
+
+            const textGeometry = new THREE.TextGeometry('BARZOIUS', {
+                font: font,
+                size: 1,
+                height: 0.2,
+                curveSegments: 12,
+            });
+
+
+            const textMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+
+
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+
+
+            textMesh.position.set(-3, 2, 0);  
+
+            scene.add(textMesh);  
+        });
+
+   
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+
+
         function animate() {
             requestAnimationFrame(animate);
+
+         
+            if (loadedObject) {
+                loadedObject.rotation.y += 0.01;  
+            }
+
             renderer.render(scene, camera);
         }
+
         animate();
     </script>
 </body>
