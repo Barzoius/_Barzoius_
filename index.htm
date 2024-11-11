@@ -1,107 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>_barzi_</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-        }
-        canvas {
-            display: block;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Colored Rectangles</title>
+  <style>
+    /* Basic Reset */
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-color: #e6dfc3;
+        border: 20px solid #21201d;
+        border-radius: 0px;
+        box-sizing: border-box;
+        padding: 10px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Container for the rectangles */
+    .container {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 50px;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      /* border: 2px solid black; */
+    }
+
+    /* Style for the rectangles */
+    .rectangle {
+      flex: 1; /* Allow rectangles to scale evenly */
+      min-width: 0; /* Ensure they can shrink if necessary */
+      height: 100px;
+      background-color: lightgray; /* Default color */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-weight: bold;
+      color: white;
+      transition: background-color 0.3s ease;
+      border-top-left-radius: 10px; /* Rounded top-left corner */
+      border-top-right-radius: 10px; /* Rounded top-right corner */
+      border-bottom-left-radius: 0; /* Straight bottom-left corner */
+      border-bottom-right-radius: 0; /* Straight bottom-right corner */
+    }
+
+    /* Change color on hover */
+    .rectangle:hover {
+      opacity: 0.8;
+    }
+
+    /* Hidden expansion area (to be revealed) */
+    .expansion {
+      height: 0;
+      background-color: transparent;
+      transition: height 0.5s ease, background-color 0.5s ease, width 0.5s ease;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      overflow: hidden;
+    }
+
+    /* For better visibility of text */
+    .expansion p {
+      text-align: center;
+      font-size: 24px;
+      color: white;
+      padding: 20px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
-    
-    <script>
+  <div class="container">
+    <div class="rectangle" data-color="#983738">Red</div>
+    <div class="rectangle" data-color="#bc6840">Blue</div>
+    <div class="rectangle" data-color="#ce954b">Green</div>
+    <div class="rectangle" data-color="#af7b85">Yellow</div>
+    <div class="rectangle" data-color="#554a86">Purple</div> 
+    <div class="rectangle" data-color="#21201c">Orange</div> 
+  </div>
+  <div class="expansion"></div>
 
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+  <script>
+    const rectangles = document.querySelectorAll('.rectangle');
+    const expansion = document.querySelector('.expansion');
+    const container = document.querySelector('.container');
 
-        camera.position.z = 5;
+    // Set the initial background color of the rectangles based on their data-color
+    rectangles.forEach(rectangle => {
+      const color = rectangle.getAttribute('data-color');
+      rectangle.style.backgroundColor = color; // Set the background color from the data-color attribute
+    });
 
+    // Function to set the exact width of the expansion div based on container width
+    function setExactExpansionWidth() {
+      const containerWidth = container.getBoundingClientRect().width;
+      expansion.style.width = `${containerWidth}px`;
+    }
 
-        const objLoader = new THREE.OBJLoader();
-        let loadedObject = null;
+    // Function to handle expansion and collapse
+    function expandRectangle(color, rectangle) {
+      // Set the background color of the expansion div
+      expansion.style.backgroundColor = color;
 
-        objLoader.load(
-            'Resources/Models/suzanne.obj', 
-            (object) => {             
-                // Apply red material to the model
-                object.traverse((child) => {
-                    if (child.isMesh) {
-                        child.material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-                    }
-                });
+      // Set the text for the expansion area
+      expansion.innerHTML = `<p>${color} Text</p>`;
 
-                loadedObject = object;  
-                scene.add(object);  
-            },
-            undefined, 
-            (error) => { 
-                console.error('Error loading model', error);
-            }
-        );
+      // Set exact width based on container
+      setExactExpansionWidth();
 
+      // Animate the expansion (height change)
+      expansion.style.height = '150px';
 
-        const fontLoader = new THREE.FontLoader();
-        let font;
+      // Change the background color of the clicked rectangle to match the expansion color
+      rectangle.style.backgroundColor = color;
+    }
 
-        fontLoader.load('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/fonts/helvetiker_regular.typeface.json', (loadedFont) => {
-            font = loadedFont;
+    // Add event listeners to each rectangle
+    rectangles.forEach(rectangle => {
+      rectangle.addEventListener('click', function(event) {
+        // Prevent click from bubbling up to the document
+        event.stopPropagation();
 
+        // Get the color data attribute from the clicked rectangle
+        const color = this.getAttribute('data-color');
 
-            const textGeometry = new THREE.TextGeometry('BARZOIUS', {
-                font: font,
-                size: 1,
-                height: 0.2,
-                curveSegments: 12,
-            });
+        // Expand the rectangle and change its color to the selected color
+        expandRectangle(color, this);
+      });
+    });
 
-
-            const textMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-
-
-            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-
-
-            textMesh.position.set(-3, 2, 0);  
-
-            scene.add(textMesh);  
+    // Click event to retract the expansion if clicked outside
+    document.addEventListener('click', function(event) {
+      if (!container.contains(event.target) && !expansion.contains(event.target)) {
+        expansion.style.height = '0';
+        expansion.style.backgroundColor = 'transparent';
+        // Reset the rectangle colors when expansion collapses
+        rectangles.forEach(rectangle => {
+          const color = rectangle.getAttribute('data-color'); // Re-fetch the initial color
+          rectangle.style.backgroundColor = color; // Reset to the original color
         });
+      }
+    });
 
-   
-        window.addEventListener('resize', () => {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-        });
-
-
-        function animate() {
-            requestAnimationFrame(animate);
-
-         
-            if (loadedObject) {
-                loadedObject.rotation.y += 0.01;  
-            }
-
-            renderer.render(scene, camera);
-        }
-
-        animate();
-    </script>
+    setExactExpansionWidth();
+    window.addEventListener('resize', setExactExpansionWidth);
+  </script>
 </body>
 </html>
