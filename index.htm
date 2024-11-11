@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Interactive Colored Rectangles</title>
+  
   <style>
     /* Basic Reset */
     html, body {
@@ -12,7 +13,13 @@
         padding: 0;
     }
 
+    @font-face {
+    font-family: 'MyCustomFont';
+    src: url('Resources/Fonts/Fipps-Regular.otf') format('truetype');
+    }
+
     body {
+        font-family: 'MyCustomFont', Arial, sans-serif;
         background-color: #e6dfc3;
         border: 20px solid #21201d;
         border-radius: 0px;
@@ -26,6 +33,43 @@
       box-sizing: border-box;
     }
 
+    /* Centered title above the rectangles */
+    .title {
+      text-align: center;
+      font-size: 32px;
+      color: #21201d;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    /* Button Container */
+    .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px; /* Reduced space between buttons and title */
+}
+
+    /* Style for the buttons */
+    .button {
+  display: inline-block;
+  width: 45px;  /* Set a fixed width for smaller buttons */
+  height: 45px;  /* Set a fixed height to maintain square shape */
+  background-color: #21201d;
+  color: #e6dfc3;
+  font-size: 16px;
+  text-align: center;
+  line-height: 50px;  /* Center the text vertically */
+  border-radius: 10px; /* Rounded corners */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect */
+.button:hover {
+  background-color: #4e4b47;
+}
+
     /* Container for the rectangles */
     .container {
       display: flex;
@@ -35,35 +79,34 @@
       width: 80%;
       margin-left: auto;
       margin-right: auto;
-      /* border: 2px solid black; */
     }
 
     /* Style for the rectangles */
     .rectangle {
-      flex: 1; /* Allow rectangles to scale evenly */
-      min-width: 0; /* Ensure they can shrink if necessary */
+      flex: 1;
+      min-width: 0;
       height: 100px;
-      background-color: lightgray; /* Default color */
+      background-color: lightgray;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
       text-transform: uppercase;
       font-weight: bold;
-      color: white;
+      font-size: 10px;
+      color: #e6dfc3;
       transition: background-color 0.3s ease;
-      border-top-left-radius: 10px; /* Rounded top-left corner */
-      border-top-right-radius: 10px; /* Rounded top-right corner */
-      border-bottom-left-radius: 0; /* Straight bottom-left corner */
-      border-bottom-right-radius: 0; /* Straight bottom-right corner */
+      border-top-left-radius: 10px; 
+      border-top-right-radius: 10px; 
+      border-bottom-left-radius: 0; 
+      border-bottom-right-radius: 0; 
     }
 
-    /* Change color on hover */
     .rectangle:hover {
       opacity: 0.8;
     }
 
-    /* Hidden expansion area (to be revealed) */
+    /* Hidden expansion area */
     .expansion {
       height: 0;
       background-color: transparent;
@@ -71,28 +114,49 @@
       width: 80%;
       margin-left: auto;
       margin-right: auto;
-      overflow: hidden;
+      overflow-y: auto;  /* Allow vertical scrolling */
+      border-top-left-radius: 0; 
+      border-top-right-radius: 0; 
+      border-bottom-left-radius: 10px; 
+      border-bottom-right-radius: 10px; 
     }
 
-    /* For better visibility of text */
+    /* Title and image styling */
+    .expansion .title {
+      text-align: center;
+      font-size: 30px;
+      color: #e6dfc3;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
     .expansion p {
       text-align: center;
-      font-size: 24px;
-      color: white;
+      font-size: 20px;
+      color: #e6dfc3;
       padding: 20px;
       font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="rectangle" data-color="#983738">Red</div>
-    <div class="rectangle" data-color="#bc6840">Blue</div>
-    <div class="rectangle" data-color="#ce954b">Green</div>
-    <div class="rectangle" data-color="#af7b85">Yellow</div>
-    <div class="rectangle" data-color="#554a86">Purple</div> 
-    <div class="rectangle" data-color="#21201c">Orange</div> 
+  <div class="title">MOISEL RARES</div>
+
+  <div class="buttons">
+    <a class="button" href="https://www.linkedin.com/in/moisel-rares/" target="_blank">L</a>
+    <a class="button" href="https://github.com/Barzoius" target="_blank">G</a>
+    <a class="button" href="https://example.com/link3" target="_blank">M</a>
   </div>
+
+  <div class="container">
+    <div class="rectangle" data-color="#983738" data-file="indexRed.html">CV</div>
+    <div class="rectangle" data-color="#bc6840" data-file="indexBlue.html">WORK</div>
+    <div class="rectangle" data-color="#ce954b" data-file="indexGreen.html">THESIS</div>
+    <div class="rectangle" data-color="#af7b85" data-file="indexYellow.html">BLOG</div>
+    <div class="rectangle" data-color="#554a86" data-file="indexPurple.html">GAME</div>
+    <div class="rectangle" data-color="#21201c" data-file="indexOrange.html">3D</div>
+  </div>
+
   <div class="expansion"></div>
 
   <script>
@@ -112,19 +176,40 @@
       expansion.style.width = `${containerWidth}px`;
     }
 
+    // Function to calculate the available space at the bottom of the page
+    function calculateAvailableHeight() {
+      const windowHeight = window.innerHeight;
+      const expansionRect = expansion.getBoundingClientRect();
+      const bottomSpace = windowHeight - expansionRect.top;
+
+      const marginBottom = 30; // Adding a buffer space (30px) from the bottom edge
+      return bottomSpace - marginBottom; // Subtract the marginBottom from the available space
+    }
+
     // Function to handle expansion and collapse
-    function expandRectangle(color, rectangle) {
+    function expandRectangle(color, file, rectangle) {
       // Set the background color of the expansion div
       expansion.style.backgroundColor = color;
 
-      // Set the text for the expansion area
-      expansion.innerHTML = `<p>${color} Text</p>`;
+      // Load the HTML file dynamically into the expansion
+      fetch(file)
+        .then(response => response.text())
+        .then(data => {
+          expansion.innerHTML = data;  // Insert the HTML content into the expansion div
+        })
+        .catch(error => {
+          expansion.innerHTML = '<p>Error loading content. Please try again later.</p>';
+          console.error('Error loading the HTML file:', error);
+        });
 
       // Set exact width based on container
       setExactExpansionWidth();
 
-      // Animate the expansion (height change)
-      expansion.style.height = '150px';
+      // Dynamically calculate the expansion height based on available space
+      const availableHeight = calculateAvailableHeight();
+
+      // Set the expansion height, ensuring it fits within the available space
+      expansion.style.height = `${Math.min(availableHeight, 500)}px`; // Limiting maximum height to 500px
 
       // Change the background color of the clicked rectangle to match the expansion color
       rectangle.style.backgroundColor = color;
@@ -136,11 +221,12 @@
         // Prevent click from bubbling up to the document
         event.stopPropagation();
 
-        // Get the color data attribute from the clicked rectangle
+        // Get the color and file data attributes from the clicked rectangle
         const color = this.getAttribute('data-color');
+        const file = this.getAttribute('data-file');
 
-        // Expand the rectangle and change its color to the selected color
-        expandRectangle(color, this);
+        // Expand the rectangle and load the corresponding HTML file
+        expandRectangle(color, file, this);
       });
     });
 
@@ -158,7 +244,12 @@
     });
 
     setExactExpansionWidth();
-    window.addEventListener('resize', setExactExpansionWidth);
+    window.addEventListener('resize', function() {
+      setExactExpansionWidth();
+      if (expansion.style.height !== '0px') {
+        expansion.style.height = `${Math.min(calculateAvailableHeight(), 500)}px`;
+      }
+    });
   </script>
 </body>
 </html>
