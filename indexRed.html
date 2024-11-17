@@ -39,13 +39,21 @@
       font-size: 18px;
       line-height: 1.6;
     }
+
+    .Moisel_Rares_CV{
+      width: 100%;  /* Make the PDF width span 100% of its container */
+      height: 800px; /* Increase the height for larger PDF display */
+      border: none;
+      border-radius: 10px;
+    }
+    
   </style>
 </head>
 <body>
   <div class="content">
     <h1>CV</h1>
     <!-- Embed PDF using object -->
-    <object data="Moisel_Rares_CV.pdf" type="application/pdf">
+    <object data="Moisel_Rares_CV" type="application/pdf">
       <!-- Fallback content if the browser doesn't support PDF embedding -->
       <p class="fallback-message">Your browser does not support embedded PDFs. You can download the PDF <a href="Moisel_Rares_CV.pdf" download>here</a>.</p>
     </object>
