@@ -23,40 +23,30 @@
     }
 
     object {
-      width: 100%;  /* Make the PDF width span 100% of its container */
-      height: 800px; /* Increase the height for larger PDF display */
+      width: 100%; /* Make the PDF width span 100% of its container */
+      max-width: 1200px; /* Set a maximum width to prevent the PDF from being too wide */
+      height: 1000px; /* Increase the height to make the PDF larger */
       border: none;
       border-radius: 10px;
     }
 
     .fallback-message {
-      font-size: 18px;
-      color: #ff6b6b;
-    }
-
-    .fallback-message{
       max-width: 500px;
       font-size: 18px;
       line-height: 1.6;
+      color: #ff6b6b;
     }
-
-    .Moisel_Rares_CV{
-      width: 100%;  /* Make the PDF width span 100% of its container */
-      height: 800px; /* Increase the height for larger PDF display */
-      border: none;
-      border-radius: 10px;
-    }
-    
   </style>
 </head>
 <body>
   <div class="content">
     <h1>CV</h1>
     <!-- Embed PDF using object -->
-    <object data="Moisel_Rares_CV" type="application/pdf">
+    <object data="Moisel_Rares_CV.pdf" type="application/pdf">
       <!-- Fallback content if the browser doesn't support PDF embedding -->
       <p class="fallback-message">Your browser does not support embedded PDFs. You can download the PDF <a href="Moisel_Rares_CV.pdf" download>here</a>.</p>
     </object>
   </div>
 </body>
 </html>
+
