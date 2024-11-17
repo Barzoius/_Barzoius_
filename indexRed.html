@@ -7,46 +7,51 @@
   <style>
     .content {
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;  /* Align items to the left */
+      justify-content: space-between;
+      align-items: center;
       gap: 20px;
       padding: 20px;
       color: #e6dfc3;
+    }
+
+    .text {
+      max-width: 500px;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .image img {
+      max-width: 250px;
+      max-height: 250px;
+      border-radius: 10px;
     }
 
     h1 {
       font-size: 32px;
       text-transform: uppercase;
       margin-bottom: 10px;
-      text-align: left;  /* Ensure the text inside h1 aligns to the left */
-      width: 100%;  /* Ensures h1 spans the full width for proper alignment */
     }
 
-    object {
-      width: 100%; /* Make the PDF width span 100% of its container */
-      max-width: 1200px; /* Set a maximum width to prevent the PDF from being too wide */
-      height: 1000px; /* Increase the height to make the PDF larger */
-      border: none;
-      border-radius: 10px;
+    a {
+      color: #e6dfc3;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease;
     }
 
-    .fallback-message {
-      max-width: 500px;
-      font-size: 18px;
-      line-height: 1.6;
-      color: #ff6b6b;
+    a:hover {
+      color: #21201d; /* Change color on hover */
     }
   </style>
 </head>
 <body>
   <div class="content">
-    <h1>CV</h1>
-    <!-- Embed PDF using object -->
-    <object data="Moisel_Rares_CV.pdf" type="application/pdf">
-      <!-- Fallback content if the browser doesn't support PDF embedding -->
-      <p class="fallback-message">Your browser does not support embedded PDFs. You can download the PDF <a href="Moisel_Rares_CV.pdf" download>here</a>.</p>
-    </object>
+    <div class="text">
+      <h1>CV</h1>
+      <p>Open it in browser,  <a href="Moisel_Rares_CV.pdf" target="_blank">here</a>,
+        or download it,  <a href="Moisel_Rares_CV.pdf" download>here</a>.</p>
+    </div>
+
   </div>
 </body>
 </html>
-
