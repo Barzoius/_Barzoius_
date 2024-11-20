@@ -7,8 +7,8 @@
   <style>
     .content {
       display: flex;
-      justify-content: flex-start;
-      align-items: center;
+      justify-content: flex-start; /* Align content to the left */
+      align-items: flex-start; /* Align content to the top */
       gap: 20px;
       padding: 20px;
       color: #e6dfc3;
@@ -17,9 +17,10 @@
     .text {
       font-size: 18px;
       line-height: 1.6;
-      text-align: left;
+      text-align: left; /* Ensure text is aligned to the left */
+      max-width: 800px; /* Restrict width to avoid stretching across the full screen */
+      margin-right: 20px; /* Add spacing on the right side */
     }
-
 
     h1 {
       font-size: 32px;
