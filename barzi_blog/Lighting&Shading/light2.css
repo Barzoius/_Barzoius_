@@ -1,0 +1,22 @@
+/* body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+
+    
+} */
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ensure the body takes the full height of the viewport */
+    margin: 0;     /* Remove any default margins from the body */
+}
+
+
+
+canvas {
+    display: block;
+}
