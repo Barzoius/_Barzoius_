@@ -30,7 +30,7 @@ const pointLightParams = {
     distance: 50,  // Distance at which the light stops affecting the scene
     decay: 20,     // How quickly the light intensity diminishes with distance
     color: 0xffffff, // Color of the light
-    position: new THREE.Vector3(5, 10, 7.5), // Light position
+    position: new THREE.Vector3(12, 20, 17.5), // Light position
     ambient: 0.1   // Ambient light intensity
 };
 
@@ -61,7 +61,7 @@ objLoader.load(
                 child.material = new THREE.MeshPhongMaterial({
                             color: diffuseColor,  // Set the diffuse color
                             normalMap: normalMap,  // Apply the normal map
-                            shininess: 10,         // Shininess factor for specular highlights
+                            shininess: 0,         // Shininess factor for specular highlights
                             specular: new THREE.Color(0.5, 0.5, 0.5), // Specular reflection color
                             emissive: diffuseColor.clone().multiplyScalar(diffuseIntensity)  // Simulate diffuse intensity by modifying the emissive property
                             });
@@ -89,6 +89,20 @@ function updateLightParameters() {
     pointLight.distance = pointLightParams.distance;
     pointLight.decay = pointLightParams.decay;
     ambientLight.intensity = pointLightParams.ambient;
+
+    const lightPosXSlider = document.getElementById('lightPosX');
+    const lightPosYSlider = document.getElementById('lightPosY');
+    const lightPosZSlider = document.getElementById('lightPosZ');
+
+    // Update light position
+    pointLight.position.x = parseFloat(lightPosXSlider.value);
+    pointLight.position.y = parseFloat(lightPosYSlider.value);
+    pointLight.position.z = parseFloat(lightPosZSlider.value);
+
+    // Update displayed values
+    document.getElementById('lightPosXValue').textContent = lightPosXSlider.value;
+    document.getElementById('lightPosYValue').textContent = lightPosYSlider.value;
+    document.getElementById('lightPosZValue').textContent = lightPosZSlider.value;
 }
 
 
@@ -108,7 +122,7 @@ function animate() {
 
     if (loadedObject) {
 
-        // loadedObject.rotation.y += 0.01;
+        //loadedObject.rotation.y += 0.01;
     }
 
     renderer.render(scene, camera);

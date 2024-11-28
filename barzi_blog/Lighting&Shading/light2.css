@@ -7,6 +7,50 @@
     
 } */
 
+#controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-right: 30px; /* Space between sliders and canvas */
+}
+
+input[type="range"] {
+    -webkit-appearance: none;  /* Remove default slider appearance */
+    appearance: none;
+    width: 200px;  /* Width of the slider */
+    height: 8px;  /* Height of the slider */
+    background: #333;  /* Dark background color */
+    border-radius: 5px;  /* Round edges of the slider */
+    outline: none;
+    transition: background 0.3s ease;
+}
+
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #000;  /* Thumb color (black) */
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #333; /* Border around the thumb */
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #000;  /* Thumb color (black) */
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #333; /* Border around the thumb */
+}
+
+/* Optional hover effect for the slider */
+input[type="range"]:hover {
+    background: #555;  /* Slightly lighter background on hover */
+}
+
 body {
     display: flex;
     justify-content: center;
