@@ -12,6 +12,10 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, canvasWidth / canvasHeight, 0.1, 100);
 const renderer = new THREE.WebGLRenderer({ canvas });
 
+// Enable shadow map in the renderer
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Optional: PCFSoftShadowMap for softer shadows
+
 camera.position.z = 5;
 camera.position.y = 2;
 
@@ -34,7 +38,6 @@ const pointLightParams = {
     ambient: 0.1   // Ambient light intensity
 };
 
-
 const pointLight = new THREE.PointLight(
     pointLightParams.color,
     pointLightParams.intensity,
@@ -43,31 +46,56 @@ const pointLight = new THREE.PointLight(
 );
 
 pointLight.position.set(pointLightParams.position.x, pointLightParams.position.y, pointLightParams.position.z);
+// Enable shadow casting for the light
+pointLight.castShadow = true;
+// Set shadow properties for better quality
+pointLight.shadow.mapSize.width = 1024;
+pointLight.shadow.mapSize.height = 1024;
+pointLight.shadow.camera.near = 0.1;
+pointLight.shadow.camera.far = 50;
+
 scene.add(pointLight);
 
 // Ambient light
 const ambientLight = new THREE.AmbientLight(0x404040, pointLightParams.ambient); // Low intensity to simulate soft ambient light
 scene.add(ambientLight);
 
+// Add a plane to the scene
+const planeGeometry = new THREE.PlaneGeometry(5, 5);
+const planeMaterial = new THREE.MeshStandardMaterial({ color: 0x808080 }); // Use ShadowMaterial for receiving shadows
+const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+plane.rotation.x = -Math.PI / 2; // Rotate plane to be horizontal
+plane.position.y = 1; // Position plane under the model
+//plane.receiveShadow = true; // Enable shadow receiving
+scene.add(plane);
+
+// const geometry = new THREE.ConeGeometry( 0.5, 2, 10 ); 
+// const material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+// const cone = new THREE.Mesh(geometry, material ); 
+// cone.position.y = 3
+// cone.position.x = 2
+// cone.castShadow= true;
+// scene.add( cone );
+
 objLoader.load(
     'Models/David/rapid.obj', 
     (object) => {             
         object.traverse((child) => {
             if (child.isMesh) {
-                
                 const diffuseColor = new THREE.Color(0x808080); 
                 const diffuseIntensity = 0.1;  
 
                 child.material = new THREE.MeshPhongMaterial({
-                            color: diffuseColor,  // Set the diffuse color
-                            normalMap: normalMap,  // Apply the normal map
-                            shininess: 0,         // Shininess factor for specular highlights
-                            specular: new THREE.Color(0.5, 0.5, 0.5), // Specular reflection color
-                            emissive: diffuseColor.clone().multiplyScalar(diffuseIntensity)  // Simulate diffuse intensity by modifying the emissive property
-                            });
+                    color: diffuseColor,  // Set the diffuse color
+                    normalMap: normalMap,  // Apply the normal map
+                    shininess: 0,         // Shininess factor for specular highlights
+                    specular: new THREE.Color(0.5, 0.5, 0.5), // Specular reflection color
+                    emissive: diffuseColor.clone().multiplyScalar(diffuseIntensity)  // Simulate diffuse intensity by modifying the emissive property
+                });
+
+                child.castShadow = true; // Enable shadow casting for the model
             }
         });
-
 
         loadedObject = object;  
         loadedObject.scale.set(0.02, 0.02, 0.02);
@@ -105,7 +133,6 @@ function updateLightParameters() {
     document.getElementById('lightPosZValue').textContent = lightPosZSlider.value;
 }
 
-
 function adjustLighting() {
     pointLightParams.intensity = 2;  // Increase intensity
     pointLightParams.distance = 100; // Increase distance
@@ -117,11 +144,9 @@ function adjustLighting() {
 function animate() {
     requestAnimationFrame(animate);
 
-
     adjustLighting();
 
     if (loadedObject) {
-
         //loadedObject.rotation.y += 0.01;
     }
 
