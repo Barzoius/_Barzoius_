@@ -66,16 +66,16 @@ const planeMaterial = new THREE.MeshStandardMaterial({ color: 0x808080 }); // Us
 const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 plane.rotation.x = -Math.PI / 2; // Rotate plane to be horizontal
 plane.position.y = 1; // Position plane under the model
-//plane.receiveShadow = true; // Enable shadow receiving
+plane.receiveShadow = true; // Enable shadow receiving
 scene.add(plane);
 
-// const geometry = new THREE.ConeGeometry( 0.5, 2, 10 ); 
-// const material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-// const cone = new THREE.Mesh(geometry, material ); 
-// cone.position.y = 3
-// cone.position.x = 2
-// cone.castShadow= true;
-// scene.add( cone );
+const geometry = new THREE.ConeGeometry( 0.5, 2, 10 ); 
+const material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+const cone = new THREE.Mesh(geometry, material ); 
+cone.position.y = 3
+cone.position.x = 2
+cone.castShadow= true;
+scene.add( cone );
 
 objLoader.load(
     'Models/David/rapid.obj', 
